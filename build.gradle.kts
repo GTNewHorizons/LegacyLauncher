@@ -19,9 +19,7 @@ repositories {
   maven { url = uri("https://libraries.minecraft.net/") }
   maven {
     url = uri("https://files.prismlauncher.org/maven")
-    metadataSources {
-      artifact()
-    }
+    metadataSources { artifact() }
   }
   mavenCentral()
 }
