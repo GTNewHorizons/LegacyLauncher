@@ -48,6 +48,8 @@ public class LaunchClassLoader extends URLClassLoader {
             DEBUG && Boolean.parseBoolean(System.getProperty("legacy.debugClassLoadingFiner", "false"));
     private static final boolean DEBUG_SAVE =
             DEBUG && Boolean.parseBoolean(System.getProperty("legacy.debugClassLoadingSave", "false"));
+    private static final boolean DEBUG_SLIM =
+            DEBUG && Boolean.parseBoolean(System.getProperty("legacy.debugClassLoadingSlim", "false"));
     private static File tempFolder = null;
 
     public LaunchClassLoader(URL[] sources) {
@@ -313,7 +315,9 @@ public class LaunchClassLoader extends URLClassLoader {
             byte[] preTransformHash = EMPTY_BYTE_ARRAY;
             if (hashers != null && basicClass != null) {
                 preTransformHash = hashers.digest(basicClass);
-                saveTransformedClass(basicClass, transformedName + "_000_pretransform");
+                if (!DEBUG_SLIM || (transformers != null && !transformers.isEmpty())) {
+                    saveTransformedClass(basicClass, transformedName + "_000_pretransform");
+                }
             }
             LogWrapper.finest(
                     "Beginning transform of [{} ({})] Start Length: {}",
