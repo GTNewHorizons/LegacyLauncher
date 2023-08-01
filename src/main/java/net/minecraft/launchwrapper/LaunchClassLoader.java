@@ -359,11 +359,17 @@ public class LaunchClassLoader extends URLClassLoader {
                     transformedName,
                     (basicClass == null ? 0 : basicClass.length));
         } else {
+            byte[] originalClass = null;
+            if (DEBUG_SLIM) {
+                originalClass = Arrays.copyOf(basicClass, basicClass.length);
+            }
             for (final IClassTransformer transformer : transformers) {
                 basicClass = transformer.transform(name, transformedName, basicClass);
             }
             if (DEBUG_SAVE) {
-                saveTransformedClass(basicClass, transformedName);
+                if (!DEBUG_SLIM || !Arrays.equals(originalClass, basicClass)) {
+                    saveTransformedClass(basicClass, transformedName);
+                }
             }
         }
         return basicClass;
